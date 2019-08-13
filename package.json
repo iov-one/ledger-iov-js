@@ -28,6 +28,7 @@
     "@babel/node": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
+    "@iov/crypto": "^0.14.3",
     "@ledgerhq/hw-transport-node-hid": "^4.35.0",
     "@ledgerhq/hw-transport-u2f": "^4.61.0",
     "@ledgerhq/hw-transport-webusb": "^4.61.0",
@@ -50,7 +51,6 @@
     "jest": "^24.7.1",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10",
-    "@iov/crypto": "^0.14.3",
     "buffer-to-uint8array": "^1.1.0"
   },
   "scripts": {
