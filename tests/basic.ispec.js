@@ -2,7 +2,10 @@ import LedgerApp from 'index.js';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import { expect, test } from 'jest';
 import { Ed25519, Sha512 } from '@iov/crypto';
-import tou8 from 'buffer-to-uint8array';
+
+function tou8(binary) {
+    return new Uint8Array(...binary);
+}
 
 describe('Integration tests', () => {
     let transport;

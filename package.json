@@ -50,8 +50,7 @@
     "eslint-plugin-vue": "^5.2.2",
     "jest": "^24.7.1",
     "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10",
-    "buffer-to-uint8array": "^1.1.0"
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
     "build": "babel src --out-dir dist",
