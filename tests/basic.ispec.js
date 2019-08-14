@@ -2,6 +2,9 @@ import LedgerApp from 'index.js';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import { expect, test } from 'jest';
 import { Ed25519, Sha512 } from '@iov/crypto';
+import { Encoding } from '@iov/encoding';
+
+const { fromHex, toHex } = Encoding;
 
 function tou8(binary) {
     return new Uint8Array(...binary);
@@ -85,7 +88,7 @@ describe('Integration tests', () => {
         const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
         const responseSign = await app.sign(pathAccount, pathChange, pathIndex, txBlob);
 
-        const pubkey = tou8(Buffer.from(responseAddr.pubKey, 'hex'));
+        const pubkey = fromHex(responseAddr.pubKey);
 
         console.log(responseAddr);
         console.log(responseSign);
@@ -93,6 +96,8 @@ describe('Integration tests', () => {
         // Check signature is valid
         const prehash = new Sha512(txBlob).digest();
         const signature = tou8(responseSign.signature);
+
+        console.log(toHex(signature));
 
         const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
         expect(valid).toEqual(true);

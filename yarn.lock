@@ -874,7 +874,7 @@
     type-tagger "^1.0.0"
     unorm "^1.5.0"
 
-"@iov/encoding@^0.14.5":
+"@iov/encoding@^0.14.3", "@iov/encoding@^0.14.5":
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/@iov/encoding/-/encoding-0.14.5.tgz#5abc43feb95e0079818ffc67ca00c801b426c636"
   integrity sha512-hI04aOSzzabM3Gca/7St82L7VckKCju3ndCfZyane8whmX0grInLVJWZzWs1/lv9WruD6z9SXNLn/zbRwyHwkA==
