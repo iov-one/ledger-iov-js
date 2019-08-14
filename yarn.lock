@@ -858,26 +858,26 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
-"@iov/crypto@^0.14.3":
-  version "0.14.5"
-  resolved "https://registry.yarnpkg.com/@iov/crypto/-/crypto-0.14.5.tgz#a88c33fe5c23bb4d2b296e65eb61850f33c886ba"
-  integrity sha512-cbH0VJPGKQLWB/ud8c/F5f8mikMnIAX9FB/hVV+s3Qa4Dj39nvBIXDDo/+w+S4O5z7hLTUe39PmfVLuYZ9gjmQ==
+"@iov/crypto@^0.16.2":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@iov/crypto/-/crypto-0.16.2.tgz#7f769a6688b7c07a621e2b53c10ba0b9112cad07"
+  integrity sha512-EfnymBT3tx6lsMwyXRkWfLHucE+uwkIhATYdQsx3jU39aEVxz3fQkWUwLAJmY60tsoo2NjEJ8ZstigFDccVbkg==
   dependencies:
-    "@iov/encoding" "^0.14.5"
-    bip39 "^2.5.0"
+    "@iov/encoding" "^0.16.2"
+    bip39 "^3.0.2"
     bn.js "^4.11.8"
     elliptic "^6.4.0"
     js-sha3 "^0.8.0"
-    libsodium-wrappers "^0.7.4"
+    libsodium-wrappers "^0.7.5"
     pbkdf2 "^3.0.16"
     sha.js "^2.4.11"
     type-tagger "^1.0.0"
     unorm "^1.5.0"
 
-"@iov/encoding@^0.14.5":
-  version "0.14.5"
-  resolved "https://registry.yarnpkg.com/@iov/encoding/-/encoding-0.14.5.tgz#5abc43feb95e0079818ffc67ca00c801b426c636"
-  integrity sha512-hI04aOSzzabM3Gca/7St82L7VckKCju3ndCfZyane8whmX0grInLVJWZzWs1/lv9WruD6z9SXNLn/zbRwyHwkA==
+"@iov/encoding@^0.16.2":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@iov/encoding/-/encoding-0.16.2.tgz#cfac263cfecb109ffdc3f1aa2fa39701e5e99130"
+  integrity sha512-EQc5+6V4uJbSIDENotojie6w/q3ZvHTafI9uUzmBaMl4J1aC/HZE8Sw5Szgm030553K7/DJoL+NuVIwpySsE4g==
   dependencies:
     base64-js "^1.3.0"
     bech32 "^1.1.3"
@@ -1211,6 +1211,11 @@
   version "10.12.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
   integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
+
+"@types/node@11.11.6":
+  version "11.11.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.11.6.tgz#df929d1bb2eee5afdda598a41930fe50b43eaa6a"
+  integrity sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -2162,7 +2167,7 @@ bip32@2.0.1:
     typeforce "^1.11.5"
     wif "^2.0.6"
 
-bip39@2.6.0, bip39@^2.5.0:
+bip39@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/bip39/-/bip39-2.6.0.tgz#9e3a720b42ec8b3fbe4038f1e445317b6a99321c"
   integrity sha512-RrnQRG2EgEoqO24ea+Q/fftuPUZLmrEM3qNhhGsA3PbaXaCW791LTzPuVyx/VprXQcTbPJ3K3UeTna8ZnVl2sg==
@@ -2172,6 +2177,16 @@ bip39@2.6.0, bip39@^2.5.0:
     randombytes "^2.0.1"
     safe-buffer "^5.0.1"
     unorm "^1.3.3"
+
+bip39@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/bip39/-/bip39-3.0.2.tgz#2baf42ff3071fc9ddd5103de92e8f80d9257ee32"
+  integrity sha512-J4E1r2N0tUylTKt07ibXvhpT2c5pyAFgvuA5q1H9uDy6dEGpjV8jmymh3MTYJDLCNbIVClSB9FbND49I6N24MQ==
+  dependencies:
+    "@types/node" "11.11.6"
+    create-hash "^1.1.0"
+    pbkdf2 "^3.0.9"
+    randombytes "^2.0.1"
 
 bl@^1.0.0:
   version "1.2.2"
@@ -2383,11 +2398,6 @@ buffer-indexof@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/buffer-indexof/-/buffer-indexof-1.1.1.tgz#52fabcc6a606d1a00302802648ef68f639da268c"
   integrity sha512-4/rOEg86jivtPTeOUUT61jJO1Ya1TrR/OkqCSZDyq84WJh3LuuiphBYJN+fm5xufIk4XAFcEwte/8WzC8If/1g==
-
-buffer-to-uint8array@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/buffer-to-uint8array/-/buffer-to-uint8array-1.1.0.tgz#cf6f41287c022f458da752c391c1a8d535ec5f72"
-  integrity sha1-z29BKHwCL0WNp1LDkcGo1TXsX3I=
 
 buffer-xor@^1.0.3:
   version "1.0.3"
@@ -6118,7 +6128,7 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libsodium-wrappers@^0.7.4:
+libsodium-wrappers@^0.7.5:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/libsodium-wrappers/-/libsodium-wrappers-0.7.5.tgz#a880a99250edecead36a336b9d9eb7192ca405b4"
   integrity sha512-QE9Q+FxLLGdJRiJTuC2GB3LEHZeHX/VcbMQeNPdAixEKo86JPy6bOWND1XmMLu0tjWUu0xIY0YpJYQApxIZwbQ==
