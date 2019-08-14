@@ -15,9 +15,9 @@
   "author": "ZondaX GmbH",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zondax/ledger-iov-js/issues"
+    "url": "https://github.com/iov-one/ledger-iov-js/issues"
   },
-  "homepage": "https://github.com/zondax/ledger-iov-js",
+  "homepage": "https://github.com/iov-one/ledger-iov-js",
   "dependencies": {
     "@babel/runtime": "^7.4.4",
     "@ledgerhq/hw-transport": "^4.35.0"
