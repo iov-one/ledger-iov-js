@@ -58,8 +58,10 @@ describe('Integration tests', () => {
     test('sign1', async () => {
         jest.setTimeout(60000);
 
-        pending('FIXME: Convert this to a proper pb serialized tx');
-        const txBlobStr = '0102030405060708091011';
+        const txBlobStr = '00cafe000b696f762d6d61696e6e657400000000000000000a231214bad055e2cbcf'
+            + 'fc633e7dc76dc1148d6e9a2debfd1a0b1080c2d72f1a04434153489a03450a0208011214bad055e2'
+            + 'cbcffc633e7dc76dc1148d6e9a2debfd1a1400000000000000000000000000000000000000002208'
+            + '08011a04434153482a09736f6d652074657874';
 
         const txBlob = Buffer.from(txBlobStr, 'hex');
 
@@ -77,8 +79,10 @@ describe('Integration tests', () => {
     test('sign2_and_verify', async () => {
         jest.setTimeout(60000);
 
-        pending('FIXME: Convert this to a proper pb serialized tx');
-        const txBlobStr = '0102030405060708091011';
+        const txBlobStr = '00cafe000b696f762d6d61696e6e657400000000000000000a231214bad055e2cbcf'
+            + 'fc633e7dc76dc1148d6e9a2debfd1a0b1080c2d72f1a04434153489a03450a0208011214bad055e2'
+            + 'cbcffc633e7dc76dc1148d6e9a2debfd1a1400000000000000000000000000000000000000002208'
+            + '08011a04434153482a09736f6d652074657874';
 
         const txBlob = Buffer.from(txBlobStr, 'hex');
 
