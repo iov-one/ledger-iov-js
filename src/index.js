@@ -21,8 +21,8 @@ const APP_KEY = 'IOV';
 
 const INS = {
     GET_VERSION: 0x00,
-    GET_ADDR_SECP256K1: 0x01,
-    SIGN_SECP256K1: 0x02,
+    GET_ADDR_ED25519: 0x01,
+    SIGN_ED25519: 0x02,
 };
 
 const ERROR_DESCRIPTION = {
@@ -73,7 +73,7 @@ export default class LedgerApp {
         );
     }
 
-    static serializeBIP44(account, change, addressIndex) {
+    static serializeBIP32(account, change, addressIndex) {
         const buf = Buffer.alloc(20);
         buf.writeUInt32LE(0x8000002c, 0);
         buf.writeUInt32LE(0x800000ea, 4);
@@ -89,8 +89,8 @@ export default class LedgerApp {
 
     static signGetChunks(account, change, addressIndex, message) {
         const chunks = [];
-        const bip44Path = LedgerApp.serializeBIP44(account, change, addressIndex);
-        chunks.push(bip44Path);
+        const bip32Path = LedgerApp.serializeBIP32(account, change, addressIndex);
+        chunks.push(bip32Path);
 
         const buffer = Buffer.from(message);
 
@@ -132,13 +132,13 @@ export default class LedgerApp {
             );
     }
 
-    async getAddress(account, change, addressIndex, requireConfirmation = false) {
-        const bip44Path = LedgerApp.serializeBIP44(account, change, addressIndex);
+    async getAddress(addressIndex, requireConfirmation = false) {
+        const bip32Path = LedgerApp.serializeBIP32(addressIndex);
 
         let p1 = 0;
         if (requireConfirmation) p1 = 1;
 
-        return this.transport.send(CLA, INS.GET_ADDR_SECP256K1, p1, 0, bip44Path)
+        return this.transport.send(CLA, INS.GET_ADDR_ED25519, p1, 0, bip32Path)
             .then(
                 (response) => {
                     const errorCodeData = response.slice(-2);
@@ -156,7 +156,7 @@ export default class LedgerApp {
 
     async signSendChunk(chunkIdx, chunkNum, chunk) {
         return this.transport.send(
-            CLA, INS.SIGN_SECP256K1,
+            CLA, INS.SIGN_ED25519,
             chunkIdx, chunkNum, chunk, [0x9000, 0x6A80],
         )
             .then(
