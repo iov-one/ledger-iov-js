@@ -6,6 +6,12 @@ import { Encoding } from '@iov/encoding';
 
 const { fromHex, toHex } = Encoding;
 
+function harden(index) {
+    // Don't use bitwise operations, which result in signed int32 in JavaScript.
+    // Addition works well for small numbers.
+    return 0x80000000 + index;
+}
+
 describe('Integration tests', () => {
     let transport;
 
@@ -34,6 +40,30 @@ describe('Integration tests', () => {
         const response = await app.getAddress(pathIndex);
         expect(response.pubKey).toEqual('05173bf18e8bc4203176be82c89ca9519100fe2cf340cbad239750bd3e3ff668');
         expect(response.address).toEqual('iov1k9rxcg8htk6wcq546p86ksgqhq8fza7h2rkrms');
+    });
+
+    test('get multiple addresses', async () => {
+        const app = new LedgerApp(transport);
+
+        const response0 = await app.getAddress(harden(0));
+        const response1 = await app.getAddress(harden(1));
+        const response2 = await app.getAddress(harden(2));
+        const response3 = await app.getAddress(harden(3));
+        const response4 = await app.getAddress(harden(4));
+
+        // Calculated using Token Finder tool with mnemonic
+        // equip will roof matter pink blind book anxiety banner elbow sun young
+        expect(response0.pubKey).toEqual('5fe68efa9e7e6373a51f6e519b4ffc7d6330c6cd011d00f6a9663ca82c361bff');
+        expect(response1.pubKey).toEqual('385fe5a946e46727297cf7ad0bff7efa637e1c7516ea2fd9f6dc717404494455');
+        expect(response2.pubKey).toEqual('c8dca85dd7f1c4f231e46d579199b310975379c37445c664d1be824f088dbe07');
+        expect(response3.pubKey).toEqual('5ad1501134fb4ba2f5b1d7c8ca539152d7c31f07a301f6192bb757b3dab52a88');
+        expect(response4.pubKey).toEqual('f10ea4323ac84582370321208c71ca77700c85a099991aefc153bc5284c9c025');
+
+        expect(response0.address).toEqual('iov1l678408y7a64cj66s8j64fevmspyfxdmzywuxl');
+        expect(response1.address).toEqual('iov1u42wk6lk009ex9t87gt54sn24m2psl4agu2f2k');
+        expect(response2.address).toEqual('iov1lxry06n8l760mkthg7sgda48cne4t26l3h8htn');
+        expect(response3.address).toEqual('iov10ur3vxhy00el95g5fqthe889z6lzqgr080c0nw');
+        expect(response4.address).toEqual('iov12evzw2nds3qzfdrlnka5hx25azaarh3q2527ua');
     });
 
     test('show address', async () => {
