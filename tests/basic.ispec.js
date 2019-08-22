@@ -35,9 +35,7 @@ describe('Integration tests', () => {
     test('get address', async () => {
         const app = new LedgerApp(transport);
 
-        const pathIndex = 0x80000005;
-
-        const response = await app.getAddress(pathIndex);
+        const response = await app.getAddress(harden(5));
         expect(response.pubKey).toEqual('05173bf18e8bc4203176be82c89ca9519100fe2cf340cbad239750bd3e3ff668');
         expect(response.address).toEqual('iov1k9rxcg8htk6wcq546p86ksgqhq8fza7h2rkrms');
     });
@@ -71,9 +69,7 @@ describe('Integration tests', () => {
 
         const app = new LedgerApp(transport);
 
-        const pathIndex = 0x8000000A;
-        const response = await app.getAddress(pathIndex, true);
-
+        const response = await app.getAddress(harden(10), true);
         expect(response.pubKey).toEqual('54fb71bc543e9424d8f9df6de1701dd459456e0d1431c1a29f8b5d4e717424af');
         expect(response.address).toEqual('iov1w7n28wf9q297z3mw8lsxvurk6ydnndxrcxcj9h');
     });
@@ -90,10 +86,8 @@ describe('Integration tests', () => {
 
         const app = new LedgerApp(transport);
 
-        const pathIndex = 0x80000000;
-        const response = await app.sign(pathIndex, txBlob);
+        const response = await app.sign(harden(0), txBlob);
 
-        console.log(response);
         expect(response.signature.length).toEqual(64);
     });
 
@@ -108,10 +102,10 @@ describe('Integration tests', () => {
         const txBlob = Buffer.from(txBlobStr, 'hex');
 
         const app = new LedgerApp(transport);
-        const pathIndex = 0x80000000;
+        const accountIndex = harden(0);
 
-        const responseAddr = await app.getAddress(pathIndex);
-        const responseSign = await app.sign(pathIndex, txBlob);
+        const responseAddr = await app.getAddress(accountIndex);
+        const responseSign = await app.sign(accountIndex, txBlob);
 
         const pubkey = fromHex(responseAddr.pubKey);
 
