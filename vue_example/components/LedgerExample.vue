@@ -52,7 +52,7 @@
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
-import LedgerApp from '../../src';
+import { LedgerApp } from '../../src';
 
 const txBlobStr = '0102030405060708091011';
 

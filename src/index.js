@@ -57,7 +57,7 @@ function errorCodeToString(statusCode) {
     return `Unknown Status Code: ${statusCode}`;
 }
 
-export default class LedgerApp {
+export class LedgerApp {
     constructor(transport, scrambleKey = APP_KEY) {
         if (typeof transport === 'undefined') {
             throw new Error('Transport has not been defined');
