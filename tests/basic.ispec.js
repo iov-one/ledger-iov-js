@@ -6,10 +6,6 @@ import { Encoding } from '@iov/encoding';
 
 const { fromHex, toHex } = Encoding;
 
-function tou8(binary) {
-    return new Uint8Array(...binary);
-}
-
 describe('Integration tests', () => {
     let transport;
 
@@ -23,22 +19,21 @@ describe('Integration tests', () => {
         expect(version).toEqual(expect.objectContaining({
             test_mode: false,
             major: 0,
-            minor: 4,
+            minor: 6,
             patch: 0,
             device_locked: false,
+            error_message: 'No errors',
         }));
     });
 
     test('get address', async () => {
         const app = new LedgerApp(transport);
 
-        const pathAccount = 0x80000000;
-        const pathChange = 0x80000000;
         const pathIndex = 0x80000005;
 
-        const response = await app.getAddress(pathAccount, pathChange, pathIndex);
-        expect(response.pubKey).toEqual('6ed1781188602d62e9f38f4fb7eb3f51537d88f4589fcead933021d1a8867b05');
-        expect(response.address).toEqual('iov1t4n49genjqk2c04fgwmtmtvcampq59rmk66jdg');
+        const response = await app.getAddress(pathIndex);
+        expect(response.pubKey).toEqual('05173bf18e8bc4203176be82c89ca9519100fe2cf340cbad239750bd3e3ff668');
+        expect(response.address).toEqual('iov1k9rxcg8htk6wcq546p86ksgqhq8fza7h2rkrms');
     });
 
     test('show address', async () => {
@@ -46,13 +41,11 @@ describe('Integration tests', () => {
 
         const app = new LedgerApp(transport);
 
-        const pathAccount = 0x80000000;
-        const pathChange = 0x80000000;
         const pathIndex = 0x8000000A;
-        const response = await app.getAddress(pathAccount, pathChange, pathIndex, true);
+        const response = await app.getAddress(pathIndex, true);
 
-        expect(response.pubKey).toEqual('61d631e7dc190cdf62395ad44ac4495324178ee3975f37f03c523026d952f713');
-        expect(response.address).toEqual('iov1m6atk68ge39t24qaahqxsy72ffkus4u7t8tr5a');
+        expect(response.pubKey).toEqual('54fb71bc543e9424d8f9df6de1701dd459456e0d1431c1a29f8b5d4e717424af');
+        expect(response.address).toEqual('iov1w7n28wf9q297z3mw8lsxvurk6ydnndxrcxcj9h');
     });
 
     test('sign1', async () => {
@@ -67,13 +60,11 @@ describe('Integration tests', () => {
 
         const app = new LedgerApp(transport);
 
-        const pathAccount = 0x80000000;
-        const pathChange = 0x80000000;
         const pathIndex = 0x80000000;
-        const response = await app.sign(pathAccount, pathChange, pathIndex, txBlob);
+        const response = await app.sign(pathIndex, txBlob);
 
         console.log(response);
-        expect(response.signature.lentgh).toEqual(64);
+        expect(response.signature.length).toEqual(64);
     });
 
     test('sign2_and_verify', async () => {
@@ -87,12 +78,10 @@ describe('Integration tests', () => {
         const txBlob = Buffer.from(txBlobStr, 'hex');
 
         const app = new LedgerApp(transport);
-        const pathAccount = 0x80000000;
-        const pathChange = 0x80000000;
         const pathIndex = 0x80000000;
 
-        const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
-        const responseSign = await app.sign(pathAccount, pathChange, pathIndex, txBlob);
+        const responseAddr = await app.getAddress(pathIndex);
+        const responseSign = await app.sign(pathIndex, txBlob);
 
         const pubkey = fromHex(responseAddr.pubKey);
 
@@ -101,7 +90,7 @@ describe('Integration tests', () => {
 
         // Check signature is valid
         const prehash = new Sha512(txBlob).digest();
-        const signature = tou8(responseSign.signature);
+        const signature = new Uint8Array([...responseSign.signature]);
 
         console.log(toHex(signature));
 
