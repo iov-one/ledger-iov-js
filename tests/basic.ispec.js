@@ -1,8 +1,8 @@
-import LedgerApp from 'index.js';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import { expect, test } from 'jest';
 import { Ed25519, Sha512 } from '@iov/crypto';
 import { Encoding } from '@iov/encoding';
+import LedgerApp from '..';
 
 const { fromHex, toHex } = Encoding;
 
