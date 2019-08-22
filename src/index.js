@@ -19,6 +19,8 @@ const CLA = 0x22;
 const CHUNK_SIZE = 250;
 const APP_KEY = 'IOV';
 
+const IOV_COIN_TYPE = 0x800000ea;
+
 const INS = {
     GET_VERSION: 0x00,
     GET_ADDR_ED25519: 0x01,
@@ -73,23 +75,18 @@ export default class LedgerApp {
         );
     }
 
-    static serializeBIP32(account, change, addressIndex) {
+    static serializeBIP32(addressIndex) {
         const buf = Buffer.alloc(20);
         buf.writeUInt32LE(0x8000002c, 0);
-        buf.writeUInt32LE(0x800000ea, 4);
-        // eslint-disable-next-line no-bitwise
-        buf.writeUInt32LE(account, 8);
-        // eslint-disable-next-line no-bitwise
-        buf.writeUInt32LE(change, 12);
-        // eslint-disable-next-line no-bitwise
-        buf.writeUInt32LE(addressIndex, 16);
+        buf.writeUInt32LE(IOV_COIN_TYPE, 4);
+        buf.writeUInt32LE(addressIndex, 8);
 
         return buf;
     }
 
-    static signGetChunks(account, change, addressIndex, message) {
+    static signGetChunks(addressIndex, message) {
         const chunks = [];
-        const bip32Path = LedgerApp.serializeBIP32(account, change, addressIndex);
+        const bip32Path = LedgerApp.serializeBIP32(addressIndex);
         chunks.push(bip32Path);
 
         const buffer = Buffer.from(message);
@@ -144,8 +141,10 @@ export default class LedgerApp {
                     const errorCodeData = response.slice(-2);
                     const errorCode = errorCodeData[0] * 256 + errorCodeData[1];
                     return {
-                        pubKey: response.slice(0, 32).toString('hex'),
-                        address: response.slice(32, response.length - 2).toString('ascii'),
+                        pubKey: response.slice(0, 32)
+                            .toString('hex'),
+                        address: response.slice(32, response.length - 2)
+                            .toString('ascii'),
                         return_code: errorCode,
                         error_message: errorCodeToString(errorCode),
                     };
@@ -185,8 +184,8 @@ export default class LedgerApp {
             );
     }
 
-    async sign(account, change, addressIndex, message) {
-        const chunks = LedgerApp.signGetChunks(account, change, addressIndex, message);
+    async sign(addressIndex, message) {
+        const chunks = LedgerApp.signGetChunks(addressIndex, message);
         return this.signSendChunk(1, chunks.length, chunks[0], [0x9000])
             .then(
                 async (result) => {
