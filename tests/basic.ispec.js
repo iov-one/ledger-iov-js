@@ -36,7 +36,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x80000005;
+        const pathIndex = harden(5);
         const response = await app.getAddress(pathIndex);
 
         expect(response.pubKey)
@@ -58,7 +58,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x8000000A;
+        const pathIndex = harden(10);
         const response = await app.getAddress(pathIndex, true);
 
         expect(response.pubKey)
@@ -86,7 +86,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x80000000;
+        const pathIndex = harden(0);
 
         const responseAddr = await app.getAddress(pathIndex);
         const pubkey = fromHex(responseAddr.pubKey);
@@ -126,7 +126,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x80000000;
+        const pathIndex = harden(0);
 
         const responseAddr = await app.getAddress(pathIndex);
         const pubkey = fromHex(responseAddr.pubKey);
