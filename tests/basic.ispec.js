@@ -6,6 +6,12 @@ import LedgerApp from '..';
 
 const { fromHex, toHex } = Encoding;
 
+function harden(index) {
+    // Don't use bitwise operations, which result in signed int32 in JavaScript.
+    // Addition works well for small numbers.
+    return 0x80000000 + index;
+}
+
 describe('Integration tests', () => {
     let transport;
 
