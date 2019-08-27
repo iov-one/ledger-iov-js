@@ -1,10 +1,16 @@
-import LedgerApp from 'index.js';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import { expect, test } from 'jest';
 import { Ed25519, Sha512 } from '@iov/crypto';
 import { Encoding } from '@iov/encoding';
+import LedgerApp from '..';
 
 const { fromHex, toHex } = Encoding;
+
+function harden(index) {
+    // Don't use bitwise operations, which result in signed int32 in JavaScript.
+    // Addition works well for small numbers.
+    return 0x80000000 + index;
+}
 
 describe('Integration tests', () => {
     let transport;
@@ -30,7 +36,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x80000005;
+        const pathIndex = harden(5);
         const response = await app.getAddress(pathIndex);
 
         expect(response.pubKey)
@@ -52,7 +58,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x8000000A;
+        const pathIndex = harden(10);
         const response = await app.getAddress(pathIndex, true);
 
         expect(response.pubKey)
@@ -80,7 +86,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x80000000;
+        const pathIndex = harden(0);
 
         const responseAddr = await app.getAddress(pathIndex);
         const pubkey = fromHex(responseAddr.pubKey);
@@ -120,7 +126,7 @@ describe('Integration tests', () => {
         const app = new LedgerApp(transport);
         const version = await app.getVersion();
 
-        const pathIndex = 0x80000000;
+        const pathIndex = harden(0);
 
         const responseAddr = await app.getAddress(pathIndex);
         const pubkey = fromHex(responseAddr.pubKey);
