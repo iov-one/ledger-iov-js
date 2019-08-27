@@ -58,12 +58,14 @@ function errorCodeToString(statusCode) {
 }
 
 export default class LedgerApp {
-  constructor(transport, scrambleKey = APP_KEY) {
-    if (typeof transport === "undefined") {
+  constructor(transport) {
+    if (!transport) {
       throw new Error("Transport has not been defined");
     }
 
     this.transport = transport;
+
+    const scrambleKey = APP_KEY;
     transport.decorateAppAPIMethods(this, ["getVersion", "getAddress", "sign"], scrambleKey);
   }
 
