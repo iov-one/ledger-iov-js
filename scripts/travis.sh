@@ -17,12 +17,12 @@ fold_start "yarn-install"
 yarn install
 fold_end
 
-fold_start "yarn-lint"
-yarn lint
-fold_end
-
 fold_start "yarn-build"
 yarn build
+fold_end
+
+fold_start "yarn-lint"
+yarn lint
 fold_end
 
 fold_start "yarn-test-unit"
