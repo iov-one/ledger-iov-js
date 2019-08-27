@@ -70,6 +70,8 @@ export default class LedgerApp {
   }
 
   static serializeBIP32(addressIndex) {
+    if (!Number.isInteger(addressIndex)) throw new Error("Input must be an integer");
+
     const buf = Buffer.alloc(12);
     buf.writeUInt32LE(0x8000002c, 0);
     buf.writeUInt32LE(IOV_COIN_TYPE, 4);

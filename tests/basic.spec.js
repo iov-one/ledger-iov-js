@@ -17,5 +17,15 @@ describe("App", () => {
       expect(App.serializeBIP32(0x80000000 + 0xffeedd).toString("hex")).toEqual("2c000080ea000080ddeeff80");
       expect(App.serializeBIP32(0xffffffff).toString("hex")).toEqual("2c000080ea000080ffffffff");
     });
+
+    it("throws for values out of range", () => {
+      expect(() => App.serializeBIP32("0")).toThrowError(/Input must be an integer/);
+      expect(() => App.serializeBIP32(Number.NaN)).toThrowError(/Input must be an integer/);
+      expect(() => App.serializeBIP32(1.5)).toThrowError(/Input must be an integer/);
+      expect(() => App.serializeBIP32(Number.POSITIVE_INFINITY)).toThrowError(/Input must be an integer/);
+
+      expect(() => App.serializeBIP32(-1)).toThrowError(/is out of range/);
+      expect(() => App.serializeBIP32(0xffffffff + 1)).toThrowError(/is out of range/);
+    });
   });
 });
