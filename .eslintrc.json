@@ -22,5 +22,9 @@
     "parser": "babel-eslint",
     "ecmaVersion": 2018,
     "sourceType": "module"
+  },
+  "rules": {
+    "vue/html-self-closing": "off",
+    "vue/max-attributes-per-line": "off"
   }
 }

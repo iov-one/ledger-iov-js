@@ -52,8 +52,8 @@
     "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
-    "lint": "eslint --max-warnings 0 \"{src,tests}/**/*.js\"",
-    "lint-fix": "eslint \"{src,tests}/**/*.js\" --fix",
+    "lint": "eslint --max-warnings 0 \"{src,tests,vue_example}/**/*.{js,vue}\"",
+    "lint-fix": "eslint \"{src,tests,vue_example}/**/*.{js,vue}\" --fix",
     "build": "babel src --out-dir dist",
     "test:unit": "jest -c jest.config.unit.js",
     "test:integration": "jest -c jest.config.integration.js --runInBand --detectOpenHandles",
