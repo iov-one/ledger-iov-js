@@ -1,2 +1,1 @@
-test('empty unit test', async () => {
-});
+test("empty unit test", async () => {});
