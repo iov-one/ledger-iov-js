@@ -4,7 +4,7 @@ import { Ed25519, Sha512 } from "@iov/crypto";
 import { Encoding } from "@iov/encoding";
 import LedgerApp from "..";
 
-const { fromHex, toHex } = Encoding;
+const { fromHex } = Encoding;
 
 function harden(index) {
   // Don't use bitwise operations, which result in signed int32 in JavaScript.
@@ -86,24 +86,18 @@ describe("Integration tests", () => {
 
     const responseAddr = await app.getAddress(pathIndex);
     const pubkey = fromHex(responseAddr.pubKey);
-
     const responseSign = await app.sign(pathIndex, txBlob);
-    console.log(responseSign);
 
-    if (!version.test_mode) {
+    if (version.test_mode) {
+      // Check signature is valid
+      const prehash = new Sha512(txBlob).digest();
+      const signature = new Uint8Array([...responseSign.signature]);
+      const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
+      expect(valid).toEqual(true);
+    } else {
       expect(responseSign.return_code).toEqual(27012);
       expect(responseSign.error_message).toEqual("Data is invalid");
-      return;
     }
-
-    // Check signature is valid
-    const prehash = new Sha512(txBlob).digest();
-    const signature = new Uint8Array([...responseSign.signature]);
-
-    console.log(toHex(signature));
-
-    const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
-    expect(valid).toEqual(true);
   });
 
   test("sign_and_verify_mainnet", async () => {
@@ -126,21 +120,16 @@ describe("Integration tests", () => {
     const pubkey = fromHex(responseAddr.pubKey);
 
     const responseSign = await app.sign(pathIndex, txBlob);
-    console.log(responseSign);
 
     if (version.test_mode) {
       expect(responseSign.return_code).toEqual(27012);
       expect(responseSign.error_message).toEqual("Data is invalid");
-      return;
+    } else {
+      // Check signature is valid
+      const prehash = new Sha512(txBlob).digest();
+      const signature = new Uint8Array([...responseSign.signature]);
+      const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
+      expect(valid).toEqual(true);
     }
-
-    // Check signature is valid
-    const prehash = new Sha512(txBlob).digest();
-    const signature = new Uint8Array([...responseSign.signature]);
-
-    console.log(toHex(signature));
-
-    const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
-    expect(valid).toEqual(true);
   });
 });
