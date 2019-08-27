@@ -25,7 +25,7 @@ describe("Integration tests", () => {
     expect(version).toEqual(
       expect.objectContaining({
         major: 0,
-        minor: 7,
+        minor: 8,
         patch: 0,
         device_locked: false,
         error_message: "No errors",
