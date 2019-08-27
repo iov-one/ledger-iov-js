@@ -70,11 +70,10 @@ export default class LedgerApp {
   }
 
   static serializeBIP32(addressIndex) {
-    const buf = Buffer.alloc(20);
+    const buf = Buffer.alloc(12);
     buf.writeUInt32LE(0x8000002c, 0);
     buf.writeUInt32LE(IOV_COIN_TYPE, 4);
     buf.writeUInt32LE(addressIndex, 8);
-
     return buf;
   }
 
