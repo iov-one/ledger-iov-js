@@ -6,18 +6,13 @@
     "jest/globals": true
   },
   "plugins": [
-    "jest"
+    "jest",
+    "prettier"
   ],
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "paths": ["src"]
-      }
-    }
-  },
   "extends": [
     "airbnb-base",
-    "plugin:vue/recommended"
+    "plugin:vue/recommended",
+    "plugin:prettier/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -27,11 +22,5 @@
     "parser": "babel-eslint",
     "ecmaVersion": 2018,
     "sourceType": "module"
-  },
-  "rules": {
-    "indent": [
-      "error",
-      4
-    ]
   }
 }
