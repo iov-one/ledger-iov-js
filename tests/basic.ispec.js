@@ -116,8 +116,7 @@ describe("Integration tests", () => {
     if (version.test_mode) {
       // Check signature is valid
       const prehash = new Sha512(txBlob).digest();
-      const signature = new Uint8Array([...responseSign.signature]);
-      const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
+      const valid = await Ed25519.verifySignature(responseSign.signature, prehash, pubkey);
       expect(valid).toEqual(true);
     } else {
       expect(responseSign.return_code).toEqual(27012);
@@ -152,8 +151,7 @@ describe("Integration tests", () => {
     } else {
       // Check signature is valid
       const prehash = new Sha512(txBlob).digest();
-      const signature = new Uint8Array([...responseSign.signature]);
-      const valid = await Ed25519.verifySignature(signature, prehash, pubkey);
+      const valid = await Ed25519.verifySignature(responseSign.signature, prehash, pubkey);
       expect(valid).toEqual(true);
     }
   });
