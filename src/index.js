@@ -171,7 +171,7 @@ export class LedgerApp {
 
   async sign(addressIndex, message) {
     const chunks = LedgerApp.signGetChunks(addressIndex, message);
-    return this.signSendChunk(1, chunks.length, chunks[0], [0x9000]).then(async result => {
+    return this.signSendChunk(1, chunks.length, chunks[0]).then(async result => {
       for (let i = 1; i < chunks.length; i += 1) {
         // eslint-disable-next-line no-await-in-loop,no-param-reassign
         result = await this.signSendChunk(1 + i, chunks.length, chunks[i]);
