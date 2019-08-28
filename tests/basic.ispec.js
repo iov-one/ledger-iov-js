@@ -6,12 +6,6 @@ import { LedgerApp } from "..";
 
 const { fromHex } = Encoding;
 
-function harden(index) {
-  // Don't use bitwise operations, which result in signed int32 in JavaScript.
-  // Addition works well for small numbers.
-  return 0x80000000 + index;
-}
-
 describe("Integration tests", () => {
   let transport;
 
@@ -37,8 +31,7 @@ describe("Integration tests", () => {
     const app = new LedgerApp(transport);
     const version = await app.getVersion();
 
-    const pathIndex = harden(5);
-    const response = await app.getAddress(pathIndex);
+    const response = await app.getAddress(5);
 
     expect(response.pubKey).toEqual("05173bf18e8bc4203176be82c89ca9519100fe2cf340cbad239750bd3e3ff668");
 
@@ -54,11 +47,11 @@ describe("Integration tests", () => {
     const app = new LedgerApp(transport);
     const version = await app.getVersion();
 
-    const response0 = await app.getAddress(harden(0));
-    const response1 = await app.getAddress(harden(1));
-    const response2 = await app.getAddress(harden(2));
-    const response3 = await app.getAddress(harden(3));
-    const response4 = await app.getAddress(harden(4));
+    const response0 = await app.getAddress(0);
+    const response1 = await app.getAddress(1);
+    const response2 = await app.getAddress(2);
+    const response3 = await app.getAddress(3);
+    const response4 = await app.getAddress(4);
 
     // Calculated using Token Finder tool with mnemonic
     // equip will roof matter pink blind book anxiety banner elbow sun young
@@ -89,8 +82,7 @@ describe("Integration tests", () => {
     const app = new LedgerApp(transport);
     const version = await app.getVersion();
 
-    const pathIndex = harden(10);
-    const response = await app.getAddress(pathIndex, true);
+    const response = await app.getAddress(10, true);
 
     expect(response.pubKey).toEqual("54fb71bc543e9424d8f9df6de1701dd459456e0d1431c1a29f8b5d4e717424af");
 
@@ -115,11 +107,11 @@ describe("Integration tests", () => {
     const app = new LedgerApp(transport);
     const version = await app.getVersion();
 
-    const pathIndex = harden(0);
+    const accountIndex = 0;
 
-    const responseAddr = await app.getAddress(pathIndex);
+    const responseAddr = await app.getAddress(accountIndex);
     const pubkey = fromHex(responseAddr.pubKey);
-    const responseSign = await app.sign(pathIndex, txBlob);
+    const responseSign = await app.sign(accountIndex, txBlob);
 
     if (version.test_mode) {
       // Check signature is valid
@@ -147,12 +139,12 @@ describe("Integration tests", () => {
     const app = new LedgerApp(transport);
     const version = await app.getVersion();
 
-    const pathIndex = harden(0);
+    const accountIndex = 0;
 
-    const responseAddr = await app.getAddress(pathIndex);
+    const responseAddr = await app.getAddress(accountIndex);
     const pubkey = fromHex(responseAddr.pubKey);
 
-    const responseSign = await app.sign(pathIndex, txBlob);
+    const responseSign = await app.sign(accountIndex, txBlob);
 
     if (version.test_mode) {
       expect(responseSign.return_code).toEqual(27012);
