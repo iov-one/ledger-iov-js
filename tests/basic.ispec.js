@@ -2,6 +2,7 @@ import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import { expect, test } from "jest";
 import { Ed25519, Sha512 } from "@iov/crypto";
 import { Encoding } from "@iov/encoding";
+import * as semver from "semver";
 import { LedgerApp } from "..";
 
 const { fromHex } = Encoding;
@@ -15,16 +16,15 @@ describe("Integration tests", () => {
 
   test("get version", async () => {
     const app = new LedgerApp(transport);
-    const version = await app.getVersion();
-    expect(version).toEqual(
+    const response = await app.getVersion();
+    expect(response).toEqual(
       expect.objectContaining({
-        major: 0,
-        minor: 8,
-        patch: 0,
         device_locked: false,
         error_message: "No errors",
       }),
     );
+    expect(response.version).toMatch(/^[0-9]+\.[0-9]+\.[0-9]+$/);
+    expect(semver.satisfies(response.version, "^0.8.0 || ^0.9.0")).toEqual(true);
   });
 
   test("get address", async () => {

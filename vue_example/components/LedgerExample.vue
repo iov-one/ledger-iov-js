@@ -101,7 +101,7 @@ export default {
       }
 
       this.log("Response received!");
-      this.log(`App Version ${response.major}.${response.minor}.${response.patch}`);
+      this.log(`App Version ${response.version}`);
       this.log(`Device Locked: ${response.device_locked}`);
       this.log(`Test mode: ${response.test_mode}`);
       this.log("Full response:");
