@@ -115,8 +115,8 @@ export default {
       const app = new LedgerApp(transport);
 
       // now it is possible to access all commands in the app
-      const pathIndex = 0x80000000;
-      const response = await app.getAddress(pathIndex, false);
+      const accountIndex = 0;
+      const response = await app.getAddress(accountIndex, false);
       if (response.return_code !== 0x9000) {
         this.log(`Error [${response.return_code}] ${response.error_message}`);
         return;
@@ -139,8 +139,8 @@ export default {
 
       // now it is possible to access all commands in the app
       this.log("Please click in the device");
-      const pathIndex = 0x80000000;
-      const response = await app.getAddress(pathIndex, true);
+      const accountIndex = 0;
+      const response = await app.getAddress(accountIndex, true);
       if (response.return_code !== 0x9000) {
         this.log(`Error [${response.return_code}] ${response.error_message}`);
         return;
@@ -163,8 +163,8 @@ export default {
 
       // now it is possible to access all commands in the app
       const message = Buffer.from(txBlobStr, "hex");
-      const pathIndex = 0x80000000;
-      const response = await app.sign(pathIndex, message);
+      const accountIndex = 0;
+      const response = await app.sign(accountIndex, message);
 
       this.log("Response received!");
       this.log("...");
