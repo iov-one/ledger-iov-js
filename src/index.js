@@ -116,9 +116,7 @@ export class LedgerApp {
       const errorCode = errorCodeData[0] * 256 + errorCodeData[1];
       return {
         test_mode: response[0] !== 0,
-        major: response[1],
-        minor: response[2],
-        patch: response[3],
+        version: `${response[1]}.${response[2]}.${response[3]}`,
         device_locked: response[4] === 1,
         return_code: errorCode,
         error_message: errorCodeToString(errorCode),
