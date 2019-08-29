@@ -148,21 +148,23 @@ export class LedgerApp {
     return this.transport
       .send(CLA, INS.SIGN_ED25519, chunkIdx, chunkNum, chunk, [0x9000, 0x6a80])
       .then(response => {
+        if (response.length < 2) {
+          throw new Error("Response too short to cut status code");
+        }
+
         const errorCodeData = response.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
         let errorMessage = errorCodeToString(returnCode);
 
+        let signature = new Uint8Array();
         if (returnCode === 0x6a80) {
           errorMessage = response.slice(0, response.length - 2).toString("ascii");
-        }
-
-        let signature = null;
-        if (response.length > 2) {
+        } else {
           signature = response.slice(0, response.length - 2);
         }
 
         return {
-          signature,
+          signature: new Uint8Array([...signature]),
           return_code: returnCode,
           error_message: errorMessage,
         };
