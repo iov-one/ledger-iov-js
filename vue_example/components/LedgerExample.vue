@@ -41,7 +41,13 @@ import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import { LedgerApp } from "../../src";
 
-const txBlobStr = "0102030405060708091011";
+const txBlobStr =
+  "00cafe000b696f762d6d61696e6e657400000000000000070a2312145ae2c58796b0ad48ffe7602eac3353488c859a2b1a0b1080c2d72f1a0" +
+  "443415348220800000000000000012208000000000000007b220800000000000001c722080000000000000b3d9a03c2010a02080112148787" +
+  "878787878787aaaaaaaaaaaaaaaa999999991a14020daec62066ec82a5a1b40378d87457ed88e4fc220d08081080d293ad031a03494f562a8" +
+  "001412076657279206c6f6e67206d656d6f206c6f72656d20697073756d206c6f72656d20697073756d2e20412076657279206c6f6e67206d" +
+  "656d6f206c6f72656d20697073756d206c6f72656d20697073756d2e20412076657279206c6f6e67206d656d6f206c6f72656d20697073756" +
+  "d206c6f72656d20697073756d21213131";
 
 export default {
   name: "LedgerExample",
@@ -101,11 +107,11 @@ export default {
       }
 
       this.log("Response received!");
+      this.log(response);
+      this.log("...");
       this.log(`App Version ${response.version}`);
       this.log(`Device Locked: ${response.device_locked}`);
       this.log(`Test mode: ${response.test_mode}`);
-      this.log("Full response:");
-      this.log(response);
     },
     async getAddress() {
       this.deviceLog = [];
@@ -123,12 +129,11 @@ export default {
       }
 
       this.log("Response received!");
+      this.log(response);
       this.log("...");
       this.log(`PubKey ${response.pubKey}`);
       this.log(`Address: ${response.address}`);
       this.log("...");
-      this.log("Full response:");
-      this.log(response);
     },
     async showAddress() {
       this.deviceLog = [];
@@ -147,12 +152,11 @@ export default {
       }
 
       this.log("Response received!");
+      this.log(response);
       this.log("...");
       this.log(`PubKey ${response.pubKey}`);
       this.log(`Address: ${response.address}`);
       this.log("...");
-      this.log("Full response:");
-      this.log(response);
     },
     async signExampleTx() {
       this.deviceLog = [];
@@ -167,6 +171,7 @@ export default {
       const response = await app.sign(accountIndex, message);
 
       this.log("Response received!");
+      this.log(response);
       this.log("...");
       this.log(`Signature: ${response.signature.toString("hex")}`);
       this.log("...");
