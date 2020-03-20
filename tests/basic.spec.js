@@ -1,4 +1,4 @@
-import { LedgerApp } from "..";
+import { LedgerApp } from "../src";
 
 describe("LedgerApp", () => {
   describe("serializeBIP32", () => {

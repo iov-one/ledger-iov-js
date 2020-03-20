@@ -15,47 +15,18 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-const CLA = 0x22;
-const CHUNK_SIZE = 250;
-const APP_KEY = "IOV";
+import {
+  APP_KEY,
+  CHUNK_SIZE,
+  CLA,
+  ERROR_CODE,
+  errorCodeToString,
+  INS,
+  PAYLOAD_TYPE,
+  processErrorResponse,
+} from "./common";
 
 const IOV_COIN_TYPE = 234;
-
-const INS = {
-  GET_VERSION: 0x00,
-  GET_ADDR_ED25519: 0x01,
-  SIGN_ED25519: 0x02,
-};
-
-const ERROR_DESCRIPTION = {
-  1: "U2F: Unknown",
-  2: "U2F: Bad request",
-  3: "U2F: Configuration unsupported",
-  4: "U2F: Device Ineligible",
-  5: "U2F: Timeout",
-  14: "Timeout",
-  0x9000: "No errors",
-  0x9001: "Device is busy",
-  0x6802: "Error deriving keys",
-  0x6400: "Execution Error",
-  0x6700: "Wrong Length",
-  0x6982: "Empty Buffer",
-  0x6983: "Output buffer too small",
-  0x6984: "Data is invalid",
-  0x6985: "Conditions not satisfied",
-  0x6986: "Transaction rejected",
-  0x6a80: "Bad key handle",
-  0x6b00: "Invalid P1/P2",
-  0x6d00: "Instruction not supported",
-  0x6e00: "Ledger app does not seem to be open",
-  0x6f00: "Unknown error",
-  0x6f01: "Sign/verify error",
-};
-
-function errorCodeToString(statusCode) {
-  if (statusCode in ERROR_DESCRIPTION) return ERROR_DESCRIPTION[statusCode];
-  return `Unknown Status Code: ${statusCode}`;
-}
 
 function harden(index) {
   // Don't use bitwise operations, which result in signed int32 in JavaScript
@@ -70,8 +41,7 @@ export class LedgerApp {
 
     this.transport = transport;
 
-    const scrambleKey = APP_KEY;
-    transport.decorateAppAPIMethods(this, ["getVersion", "getAddress", "sign"], scrambleKey);
+    transport.decorateAppAPIMethods(this, ["getVersion", "getAddress", "sign"], APP_KEY);
   }
 
   static serializeBIP32(accountIndex) {
@@ -85,31 +55,6 @@ export class LedgerApp {
     return buf;
   }
 
-  static signGetChunks(addressIndex, message) {
-    const chunks = [];
-    const bip32Path = LedgerApp.serializeBIP32(addressIndex);
-    chunks.push(bip32Path);
-
-    const buffer = Buffer.from(message);
-
-    for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
-      let end = i + CHUNK_SIZE;
-      if (i > buffer.length) {
-        end = buffer.length;
-      }
-      chunks.push(buffer.slice(i, end));
-    }
-
-    return chunks;
-  }
-
-  static processErrorResponse(response) {
-    return {
-      return_code: response.statusCode,
-      error_message: errorCodeToString(response.statusCode),
-    };
-  }
-
   async getVersion() {
     return this.transport.send(CLA, INS.GET_VERSION, 0, 0).then(response => {
       const errorCodeData = response.slice(-2);
@@ -121,14 +66,13 @@ export class LedgerApp {
         return_code: errorCode,
         error_message: errorCodeToString(errorCode),
       };
-    }, LedgerApp.processErrorResponse);
+    }, processErrorResponse);
   }
 
   async getAddress(addressIndex, requireConfirmation = false) {
     const bip32Path = LedgerApp.serializeBIP32(addressIndex);
 
-    let p1 = 0;
-    if (requireConfirmation) p1 = 1;
+    const p1 = requireConfirmation ? 1 : 0;
 
     return this.transport.send(CLA, INS.GET_ADDR_ED25519, p1, 0, bip32Path).then(response => {
       const errorCodeData = response.slice(-2);
@@ -139,43 +83,80 @@ export class LedgerApp {
         return_code: errorCode,
         error_message: errorCodeToString(errorCode),
       };
-    }, LedgerApp.processErrorResponse);
+    }, processErrorResponse);
   }
 
   async signSendChunk(chunkIdx, chunkNum, chunk) {
+    let payloadType = PAYLOAD_TYPE.ADD;
+    if (chunkIdx === 1) {
+      payloadType = PAYLOAD_TYPE.INIT;
+    }
+    if (chunkIdx === chunkNum) {
+      payloadType = PAYLOAD_TYPE.LAST;
+    }
     return this.transport
-      .send(CLA, INS.SIGN_ED25519, chunkIdx, chunkNum, chunk, [0x9000, 0x6a80])
+      .send(CLA, INS.SIGN_ED25519, payloadType, 0, chunk, [0x9000, 0x6984, 0x6a80])
       .then(response => {
-        if (response.length < 2) {
-          throw new Error("Response too short to cut status code");
-        }
-
         const errorCodeData = response.slice(-2);
         const returnCode = errorCodeData[0] * 256 + errorCodeData[1];
         let errorMessage = errorCodeToString(returnCode);
 
-        let signature = new Uint8Array();
-        if (returnCode === 0x6a80) {
-          errorMessage = response.slice(0, response.length - 2).toString("ascii");
-        } else {
-          signature = response.slice(0, response.length - 2);
+        if (returnCode === 0x6a80 || returnCode === 0x6984) {
+          errorMessage = `${errorMessage} : ${response.slice(0, response.length - 2).toString("ascii")}`;
+        }
+
+        let signature = null;
+        if (response.length > 2) {
+          signature = response.slice(0, 64);
         }
 
         return {
-          signature: new Uint8Array([...signature]),
+          signature,
           return_code: returnCode,
           error_message: errorMessage,
         };
-      }, LedgerApp.processErrorResponse);
+      }, processErrorResponse);
+  }
+
+  static prepareChunks(serializedPathBuffer, message) {
+    const chunks = [];
+
+    // First chunk (only path)
+    chunks.push(serializedPathBuffer);
+
+    const messageBuffer = Buffer.from(message);
+
+    const buffer = Buffer.concat([messageBuffer]);
+    for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
+      let end = i + CHUNK_SIZE;
+      if (i > buffer.length) {
+        end = buffer.length;
+      }
+      chunks.push(buffer.slice(i, end));
+    }
+
+    return chunks;
+  }
+
+  static signGetChunks(addressIndex, message) {
+    const serializedPath = LedgerApp.serializeBIP32(addressIndex);
+    return LedgerApp.prepareChunks(serializedPath, message);
   }
 
   async sign(addressIndex, message) {
     const chunks = LedgerApp.signGetChunks(addressIndex, message);
-    return this.signSendChunk(1, chunks.length, chunks[0]).then(async result => {
+
+    return this.signSendChunk(1, chunks.length, chunks[0], [ERROR_CODE.NoError]).then(async response => {
+      let result = {
+        return_code: response.return_code,
+        error_message: response.error_message,
+        signature: null,
+      };
+
       for (let i = 1; i < chunks.length; i += 1) {
-        // eslint-disable-next-line no-await-in-loop,no-param-reassign
+        // eslint-disable-next-line no-await-in-loop
         result = await this.signSendChunk(1 + i, chunks.length, chunks[i]);
-        if (result.return_code !== 0x9000) {
+        if (result.return_code !== ERROR_CODE.NoError) {
           break;
         }
       }
@@ -183,8 +164,9 @@ export class LedgerApp {
       return {
         return_code: result.return_code,
         error_message: result.error_message,
+        // ///
         signature: result.signature,
       };
-    }, LedgerApp.processErrorResponse);
+    }, processErrorResponse);
   }
 }

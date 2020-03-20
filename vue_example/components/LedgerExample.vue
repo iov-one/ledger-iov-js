@@ -1,31 +1,31 @@
 <template>
-  <div class="ledgerExample">
+  <div class="Ledger">
     <input id="webusb" v-model="transportChoice" type="radio" value="WebUSB" />
     <label for="webusb">WebUSB</label>
     <input id="u2f" v-model="transportChoice" type="radio" value="U2F" />
     <label for="u2f">U2F</label>
     <br />
     <!--
-            Commands
-        -->
+        Commands
+    -->
     <button @click="getVersion">
       Get Version
     </button>
-    <br />
+
     <button @click="getAddress">
-      Get Address
+      Get Address and Pubkey
     </button>
-    <br />
+
     <button @click="showAddress">
-      Show Address
+      Show Address and Pubkey
     </button>
-    <br />
+
     <button @click="signExampleTx">
       Sign Example TX
     </button>
     <!--
-            Commands
-        -->
+        Commands
+    -->
     <ul id="ledger-status">
       <li v-for="item in ledgerStatus" :key="item.index">
         {{ item.msg }}
@@ -50,7 +50,7 @@ const txBlobStr =
   "d206c6f72656d20697073756d21213131";
 
 export default {
-  name: "LedgerExample",
+  name: "Ledger",
   props: {},
   data() {
     return {
