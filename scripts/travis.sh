@@ -1,5 +1,6 @@
 #!/bin/bash
-set -o errexit -o nounset -o pipefail
+#set -o errexit -o nounset -o pipefail
+set -o errexit -o pipefail
 command -v shellcheck > /dev/null && shellcheck "$0"
 
 function fold_start() {
@@ -28,3 +29,4 @@ fold_end
 fold_start "yarn-test-unit"
 yarn test:unit
 fold_end
+set +u
