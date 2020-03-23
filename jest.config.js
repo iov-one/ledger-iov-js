@@ -2,35 +2,31 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-    modulePaths: [
-        '<rootDir>/src',
-        '<rootDir>/tests',
-    ],
+  modulePaths: ["<rootDir>/src", "<rootDir>/tests"],
 
-    moduleNameMapper: {
-        '^jest$': '<rootDir>/tests/jest.js',
-        '^index.js$': '<rootDir>/src/index.js'
-    },
+  moduleNameMapper: {
+    "^jest$": "<rootDir>/tests/jest.js",
+    "^index.js$": "<rootDir>/src/index.js",
+  },
 
-    // Automatically clear mock calls and instances between every test
-    clearMocks: true,
+  // Automatically clear mock calls and instances between every test
+  clearMocks: true,
 
-    // The directory where Jest should output its coverage files
-    coverageDirectory: 'coverage',
+  // The directory where Jest should output its coverage files
+  coverageDirectory: "coverage",
 
-    // A list of paths to directories that Jest should use to search for files in
-    roots: [
-        '<rootDir>',
-    ],
+  // A list of paths to directories that Jest should use to search for files in
+  roots: ["<rootDir>"],
 
-    // The test environment that will be used for testing
-    testEnvironment: 'node',
+  runner: "jest-serial-runner",
 
-    // The glob patterns Jest uses to detect test files
-    testMatch: [
-        '**/__tests__/**/*.[jt]s?(x)',
-        '**/?(*.)+(spec|test).[tj]s?(x)',
-        '**/?(*.)+(ispec|test).[tj]s?(x)',
-    ],
+  // The test environment that will be used for testing
+  testEnvironment: "node",
 
+  // The glob patterns Jest uses to detect test files
+  testMatch: [
+    "**/__tests__/**/*.[jt]s?(x)",
+    "**/?(*.)+(spec|test).[tj]s?(x)",
+    "**/?(*.)+(ispec|test).[tj]s?(x)",
+  ],
 };

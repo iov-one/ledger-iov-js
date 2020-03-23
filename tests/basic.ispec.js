@@ -3,7 +3,7 @@ import { expect, test } from "jest";
 import { Ed25519, Sha512 } from "@iov/crypto";
 import { Encoding } from "@iov/encoding";
 import * as semver from "semver";
-import { LedgerApp } from "..";
+import { LedgerApp } from "../src";
 
 const { fromHex } = Encoding;
 
@@ -24,7 +24,7 @@ describe("Integration tests", () => {
       }),
     );
     expect(response.version).toMatch(/^[0-9]+\.[0-9]+\.[0-9]+$/);
-    expect(semver.satisfies(response.version, "^0.8.0 || ^0.9.0")).toEqual(true);
+    expect(semver.satisfies(response.version, "^0.12.0")).toEqual(true);
   });
 
   test("get address", async () => {
